@@ -122,6 +122,8 @@ Motors.prototype.addEngine = function(ext, chain) {
 
   chain = chain || preschool.defaultEngineForExtension(ext);
 
+  // Store in both configuration and engine
+  this.config[ext] = chain;
   return this.engines[ext] = this.createEngine(chain);
 
 }
