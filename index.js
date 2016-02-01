@@ -52,6 +52,9 @@ module.exports = Motors = function(config) {
     this.engines[key] = this.createEngine(this.config[key]);
   }
 
+  // Store directory if designated
+  if (config.dir) this.dir = config.dir;
+
   return;
 
 };
@@ -100,7 +103,9 @@ function runTask(tasks, str, options, next) {
 
 Motors.prototype.createEngine = function(chain) {
 
-  var engines = chain.split(">").map(preschool);
+  var engines;
+
+  chain.split(">").map(function(engine) { return preschool(engine, { dir : this.dir }); });
 
   return function(str, options, next) {
     var tasks = engines.slice(0);
