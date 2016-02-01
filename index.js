@@ -103,9 +103,12 @@ function runTask(tasks, str, options, next) {
 
 Motors.prototype.createEngine = function(chain) {
 
-  var engines;
+  var engines,
+      dir = this.dir;
 
-  chain.split(">").map(function(engine) { return preschool(engine, { dir : this.dir }); });
+  engines = chain.split(">").map(function(engine) {
+    return preschool(engine, { dir : dir });
+  });
 
   return function(str, options, next) {
     var tasks = engines.slice(0);
