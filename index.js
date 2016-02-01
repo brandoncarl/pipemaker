@@ -120,7 +120,9 @@ Motors.prototype.createEngine = function(chain) {
 
 Motors.prototype.addEngine = function(ext, chain) {
 
-  this.engines[ext] = this.createEngine(chain);
+  chain = chain || preschool.defaultEngineForExtension(ext);
+
+  return this.engines[ext] = this.createEngine(chain);
 
 }
 
