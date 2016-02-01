@@ -48,9 +48,8 @@ module.exports = Motors = function(config) {
   this.config = assign(core, config);
 
   this.engines = {};
-  for (var key in this.config) {
-    this.engines[key] = this.createEngine(this.config[key]);
-  }
+  for (var ext in this.config)
+    this.addEngine(ext, this.config[ext]);
 
   // Store directory if designated
   if (config.dir) this.dir = config.dir;
