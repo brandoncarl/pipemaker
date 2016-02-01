@@ -134,3 +134,9 @@ Motors.prototype.removeEngine = function(ext) {
 
 }
 
+
+Motors.prototype.hasEngine = function(ext) {
+
+  return !!this.engines[ext];
+
+}
