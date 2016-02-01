@@ -134,7 +134,7 @@ Motors.prototype.removeEngine = function(ext) {
   delete this.engines[ext];
 
   // Add default engine back (so as not to delete core functionality)
-  if (core[ext]) this.engines[ext] = this.createEngine(core[ext]);
+  if (core[ext]) this.addEngine(ext, core[ext]);
 
 }
 
