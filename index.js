@@ -43,8 +43,9 @@ core = {
 
 */
 
-module.exports = Motors = function(config) {
+module.exports = Motors = function(config, options) {
 
+  options = options || {};
   this.config = assign(core, config);
 
   this.engines = {};
@@ -52,7 +53,7 @@ module.exports = Motors = function(config) {
     this.addEngine(ext, this.config[ext]);
 
   // Store directory if designated
-  if (config.dir) this.dir = config.dir;
+  if (options.dir) this.dir = options.dir;
 
   return;
 
