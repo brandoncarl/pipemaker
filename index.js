@@ -64,7 +64,7 @@ Motors.prototype.compile = function(type, str, options, next) {
 
   this.engines[type](str, options, next);
 
-}
+};
 
 
 
@@ -78,7 +78,7 @@ Motors.prototype.compileFile = function(filename, options, next) {
     self.compile(type, str, options, next);
   });
 
-}
+};
 
 
 /*
@@ -112,9 +112,9 @@ Motors.prototype.createEngine = function(chain) {
   return function(str, options, next) {
     var tasks = engines.slice(0);
     runTask(tasks, str, options, next);
-  }
+  };
 
-}
+};
 
 
 Motors.prototype.addEngine = function(ext, chain) {
@@ -123,9 +123,11 @@ Motors.prototype.addEngine = function(ext, chain) {
 
   // Store in both configuration and engine
   this.config[ext] = chain;
-  return this.engines[ext] = this.createEngine(chain);
+  this.engines[ext] = this.createEngine(chain);
 
-}
+  return this.engines[ext];
+
+};
 
 
 Motors.prototype.removeEngine = function(ext) {
@@ -137,11 +139,11 @@ Motors.prototype.removeEngine = function(ext) {
   // Add default engine back (so as not to delete core functionality)
   if (core[ext]) this.addEngine(ext, core[ext]);
 
-}
+};
 
 
 Motors.prototype.hasEngine = function(ext) {
 
   return !!this.engines[ext];
 
-}
+};
