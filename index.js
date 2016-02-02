@@ -54,7 +54,7 @@ var core = {
 
 **/
 
-module.exports = Motors = function(options) {
+Motors = module.exports = function(options) {
 
   // Set up defaults
   options = Object.assign({ fetch : true }, options);
