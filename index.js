@@ -73,11 +73,11 @@ Motors.prototype.compile = function(type, str, options, next) {
 Motors.prototype.compileFile = function(filename, options, next) {
 
   var self = this,
-      type = path.parse(filename).ext.replace(/^\./, "");
+      ext = path.parse(filename).ext.replace(/^\./, "");
 
   fs.readFile(filename, "utf8", function(err, str) {
     if (err) return next(err);
-    self.compile(type, str, options, next);
+    self.compile(ext, str, options, next);
   });
 
 };
