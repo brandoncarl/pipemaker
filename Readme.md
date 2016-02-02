@@ -5,7 +5,7 @@ Powerful chaining of pre- and post-processors, with dynamic dependency downloadi
 
 ## Installation
 ```
-npm install motors
+$ npm install motors
 ```
 
 ## Examples
