@@ -134,9 +134,9 @@ Motors.prototype.addEngine = function(ext, chain) {
 
 Motors.prototype.removeEngine = function(ext) {
 
-  // Delete both from configuration and engine
-  delete this.config[ext];
-  delete this.engines[ext];
+  // Delete both from mappings and engine
+  delete this.engines[this.mappings[ext]];
+  delete this.mappings[ext];
 
   // Add default engine back (so as not to delete core functionality)
   if (core[ext]) this.addEngine(ext, core[ext]);
