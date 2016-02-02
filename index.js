@@ -55,7 +55,8 @@ module.exports = Motors = function(options) {
   // Store directory if designated
   if (options.dir) this.dir = options.dir;
 
-  return;
+  // Store fetch
+  this.fetch = !!options.fetch;
 
 };
 
