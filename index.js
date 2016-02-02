@@ -4,7 +4,7 @@
   Copyright 2016 Brandon Carl
   MIT Licensed
 
-  Class
+  Instance
   • compile
   • compileFile
   • addEngine
@@ -147,7 +147,7 @@ function runTask(tasks, str, options, next) {
   Returns a compilation function based on input chain.
 
   @param {String} chain String containing names of engines to use.
-  @returns {Function} Compilation function fn(str, options, next)
+  @returns {Function} Compilation function fn(str, options, next).
 
   @example
   motors.createEngine("jade");
@@ -179,6 +179,7 @@ Motors.prototype.createEngine = function(chain) {
   Gets an engine based on chain, creating engine if necessary.
 
   @param {String} chain Chain of engines.
+  @returns {Function} Compilation function fn(str, options, next).
 
   @example
   motors.getEngine("jade>handlebars");
@@ -202,6 +203,7 @@ Motors.prototype.getEngine = function(chain) {
 
   @param {String} ext File extension to be associated with engine.
   @param {String} [chain] Optional chain for creating engine.
+  @returns {Function} Compilation function fn(str, options, next).
 
 **/
 
