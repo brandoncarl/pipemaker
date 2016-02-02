@@ -45,6 +45,9 @@ core = {
 
 module.exports = Motors = function(options) {
 
+  options = Object.assign({ fetch : true }, options);
+  this.mappings = Object.assign(core, options.mappings);
+
   this.engines = {};
   for (var ext in this.mappings)
     this.addEngine(ext, this.mappings[ext]);
