@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash.assign": "^4.0.1",
-    "preschool": "^0.1.4"
+    "preschool": "^0.2.0"
   },
   "repository": {
     "type": "git",
