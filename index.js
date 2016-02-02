@@ -42,14 +42,12 @@ core = {
 
 */
 
-module.exports = Motors = function(config, options) {
 
-  options = options || {};
-  this.config = Object.assign(core, config);
+module.exports = Motors = function(options) {
 
   this.engines = {};
-  for (var ext in this.config)
-    this.addEngine(ext, this.config[ext]);
+  for (var ext in this.mappings)
+    this.addEngine(ext, this.mappings[ext]);
 
   // Store directory if designated
   if (options.dir) this.dir = options.dir;
