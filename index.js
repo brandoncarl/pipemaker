@@ -16,7 +16,6 @@
 
 var fs        = require("fs"),
     path      = require("path"),
-    assign    = require("lodash.assign"),
     preschool = require("preschool"),
     core,
     Motors;
@@ -46,7 +45,7 @@ core = {
 module.exports = Motors = function(config, options) {
 
   options = options || {};
-  this.config = assign(core, config);
+  this.config = Object.assign(core, config);
 
   this.engines = {};
   for (var ext in this.config)
