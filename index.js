@@ -62,9 +62,10 @@ module.exports = Motors = function(options) {
 
 
 
-Motors.prototype.compile = function(type, str, options, next) {
 
-  this.engines[type](str, options, next);
+Motors.prototype.compile = function(ext, str, options, next) {
+
+  this.engines[this.mappings[ext]](str, options, next);
 
 };
 
