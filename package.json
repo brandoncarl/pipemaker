@@ -1,6 +1,6 @@
 {
   "name": "motors",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Manages multiple transpilers with chaining",
   "main": "index.js",
   "scripts": {
