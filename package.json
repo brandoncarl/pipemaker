@@ -9,7 +9,7 @@
   "author": "Brandon Carl (http://www.brandoncarl.com/)",
   "license": "ISC",
   "dependencies": {
-    "preschool": "^0.2.0"
+    "preschool": "^0.2.1"
   },
   "repository": {
     "type": "git",
