@@ -1,6 +1,6 @@
 {
-  "name": "motors",
-  "version": "0.2.2",
+  "name": "pipemaker",
+  "version": "0.3.0",
   "description": "Manages multiple transpilers with chaining",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,10 @@
   "author": "Brandon Carl (http://www.brandoncarl.com/)",
   "license": "ISC",
   "dependencies": {
-    "preschool": "^0.2.1"
+    "compilers": "^0.3.0"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/brandoncarl/motors.git"
+    "url": "git://github.com/brandoncarl/pipemaker.git"
   }
 }

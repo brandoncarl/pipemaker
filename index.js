@@ -1,6 +1,6 @@
 /**
 
-  motors
+  pipemaker
   Copyright 2016 Brandon Carl
   MIT Licensed
 
@@ -25,7 +25,7 @@
 var fs           = require("fs"),
     path         = require("path"),
     preschool    = require("preschool"),
-    Motors;
+    Pipemaker;
 
 
 
@@ -44,25 +44,25 @@ var core = {
 
 /**
 
-  Constructor for Motors class. Automatically installs packages by default.
+  Constructor for Pipemaker class. Automatically installs packages by default.
 
-  @param {Object} mappings Keys correspond to extensions, values to engine names.
+  @param {Object} mappings Keys correspond to extensions, values to pipeline names.
   @param {Object} options Install directory `dir`, and whether to `fetch` if missing.
-  @returns {Motors} Instance of class.
+  @returns {Pipemaker} Instance of class.
 
   @example
-  var motors = new Motors({ dir : process.cwd() });
+  var pipemaker = new Pipemaker({ dir : process.cwd() });
 
 **/
 
-Motors = module.exports = function(options) {
+Pipemaker = module.exports = function(options) {
 
   // Set up defaults
   options = Object.assign({ fetch : true }, options);
   this.mappings = Object.assign(core, options.mappings);
 
-  // Initialize engines
-  this.engines = {};
+  // Initialize pipelines
+  this.pipelines = {};
   for (var ext in this.mappings)
     this.addPipeline(ext, this.mappings[ext]);
 
@@ -78,24 +78,24 @@ Motors = module.exports = function(options) {
 
 /**
 
-  compiles a string using engine associated with ext
+  compiles a string using pipeline associated with ext
 
   @param {String} ext The extension associated with string (e.g. "coffee").
   @param {String} str The string to be compiled.
-  @param {Object} [options={}] Options to be passed to rendering engine.
+  @param {Object} [options={}] Options to be passed to rendering pipeline.
   @param {Function} next Callback of type fn(err, compiled).
 
   @example
-  motors.compile("coffee", "console.log 'Hello'", function(err, compiled) {
+  pipemaker.compile("coffee", "console.log 'Hello'", function(err, compiled) {
     console.log(compiled);
     // => console.log('Hello');
   });
 
 **/
 
-Motors.prototype.compile = function(ext, str, options, next) {
+Pipemaker.prototype.compile = function(ext, str, options, next) {
 
-  this.engines[this.mappings[ext]](str, options, next);
+  this.pipelines[this.mappings[ext]](str, options, next);
 
 };
 
@@ -103,20 +103,20 @@ Motors.prototype.compile = function(ext, str, options, next) {
 
 /**
 
-  compiles a file using engine associated with file's extension
+  compiles a file using pipeline associated with file's extension
 
   @param {String} filename Name of file.
-  @param {Object} [options={}] Options to be passed to rendering engine.
+  @param {Object} [options={}] Options to be passed to rendering pipeline.
   @param {Function} next Callback of type fn(err, compiled).
 
   @example
-  motors.compileFile("app.coffee", function(err, compiled) {
+  pipemaker.compileFile("app.coffee", function(err, compiled) {
     // Compiled version of app.coffee
   });
 
 **/
 
-Motors.prototype.compileFile = function(filename, options, next) {
+Pipemaker.prototype.compileFile = function(filename, options, next) {
 
   var self = this,
       ext = path.parse(filename).ext.replace(/^\./, "");
@@ -129,7 +129,7 @@ Motors.prototype.compileFile = function(filename, options, next) {
 };
 
 
-// Helper function for async iteration of engines
+// Helper function for async iteration of pipelines
 function runTask(tasks, str, options, next) {
 
   var task = tasks.shift();
@@ -147,7 +147,7 @@ function runTask(tasks, str, options, next) {
 
   Returns a compilation function based on input chain.
 
-  @param {String} chain String containing names of engines to use.
+  @param {String} chain String containing names of pipelines to use.
   @returns {Function} Compilation function fn(str, options, next).
 
   @example
@@ -159,15 +159,15 @@ function runTask(tasks, str, options, next) {
 
 Pipemaker.prototype.createPipeline = function(chain) {
 
-  var engines,
+  var pipelines,
       self = this;
 
-  engines = chain.split(">").map(function(engine) {
-    return preschool(engine, { dir : self.dir, fetch : self.fetch });
+  pipelines = chain.split(">").map(function(pipeline) {
+    return preschool(pipeline, { dir : self.dir, fetch : self.fetch });
   });
 
   return function(str, options, next) {
-    var tasks = engines.slice(0);
+    var tasks = pipelines.slice(0);
     runTask(tasks, str, options, next);
   };
 
@@ -177,9 +177,9 @@ Pipemaker.prototype.createPipeline = function(chain) {
 
 /**
 
-  Gets an engine based on chain, creating engine if necessary.
+  Gets an pipeline based on chain, creating pipeline if necessary.
 
-  @param {String} chain Chain of engines.
+  @param {String} chain Chain of pipelines.
   @returns {Function} Compilation function fn(str, options, next).
 
   @example
@@ -189,10 +189,10 @@ Pipemaker.prototype.createPipeline = function(chain) {
 
 Pipemaker.prototype.getPipeline = function(chain) {
 
-  if (!this.engines[chain])
-    this.engines[chain] = this.createPipeline(chain);
+  if (!this.pipelines[chain])
+    this.pipelines[chain] = this.createPipeline(chain);
 
-  return this.engines[chain];
+  return this.pipelines[chain];
 
 };
 
@@ -200,10 +200,10 @@ Pipemaker.prototype.getPipeline = function(chain) {
 
 /**
 
-  Adds an engine for an extension, creating engine if necessary.
+  Adds an pipeline for an extension, creating pipeline if necessary.
 
-  @param {String} ext File extension to be associated with engine.
-  @param {String} [chain] Optional chain for creating engine.
+  @param {String} ext File extension to be associated with pipeline.
+  @param {String} [chain] Optional chain for creating pipeline.
   @returns {Function} Compilation function fn(str, options, next).
 
 **/
@@ -212,11 +212,11 @@ Pipemaker.prototype.addPipeline = function(ext, chain) {
 
   chain = chain || preschool.defaultEngineForExtension(ext);
 
-  // Store in both mappings and engine
+  // Store in both mappings and pipeline
   this.mappings[ext] = chain;
-  this.engines[chain] = this.getPipeline(chain);
+  this.pipelines[chain] = this.getPipeline(chain);
 
-  return this.engines[chain];
+  return this.pipelines[chain];
 
 };
 
@@ -224,7 +224,7 @@ Pipemaker.prototype.addPipeline = function(ext, chain) {
 
 /**
 
-  Removes an engine by extension.
+  Removes an pipeline by extension.
 
   @param {String} ext File extension to for removal.
 
@@ -232,11 +232,11 @@ Pipemaker.prototype.addPipeline = function(ext, chain) {
 
 Pipemaker.prototype.removePipeline = function(ext) {
 
-  // Delete both from mappings and engine
-  delete this.engines[this.mappings[ext]];
+  // Delete both from mappings and pipeline
+  delete this.pipelines[this.mappings[ext]];
   delete this.mappings[ext];
 
-  // Add default engine back (so as not to delete core functionality)
+  // Add default pipeline back (so as not to delete core functionality)
   if (core[ext]) this.addPipeline(ext, core[ext]);
 
 };
@@ -245,10 +245,10 @@ Pipemaker.prototype.removePipeline = function(ext) {
 
 /**
 
-  Determines if an engine currently exists for an extension.
+  Determines if an pipeline currently exists for an extension.
 
   @param {String} ext File extension to check.
-  @returns {Boolean} Whether engine exists.
+  @returns {Boolean} Whether pipeline exists.
 
 **/
 
