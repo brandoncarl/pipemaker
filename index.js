@@ -9,6 +9,7 @@
   • compileFile
   • addPipeline
   • createPipeline
+  • getPipeline
   • hasPipeline
   • removePipeline
 
@@ -182,11 +183,11 @@ Pipemaker.prototype.createPipeline = function(chain) {
   @returns {Function} Compilation function fn(str, options, next).
 
   @example
-  motors.getEngine("jade>handlebars");
+  pipemaker.getPipeline("jade>handlebars");
 
 **/
 
-Motors.prototype.getEngine = function(chain) {
+Pipemaker.prototype.getPipeline = function(chain) {
 
   if (!this.engines[chain])
     this.engines[chain] = this.createPipeline(chain);
@@ -213,7 +214,7 @@ Pipemaker.prototype.addPipeline = function(ext, chain) {
 
   // Store in both mappings and engine
   this.mappings[ext] = chain;
-  this.engines[chain] = this.getEngine(chain);
+  this.engines[chain] = this.getPipeline(chain);
 
   return this.engines[chain];
 
