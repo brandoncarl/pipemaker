@@ -7,10 +7,10 @@
   Instance
   • compile
   • compileFile
-  • hasEngine
   • removeEngine
   • addPipeline
   • createPipeline
+  • hasPipeline
 
 **/
 
@@ -251,7 +251,7 @@ Motors.prototype.removeEngine = function(ext) {
 
 **/
 
-Motors.prototype.hasEngine = function(ext) {
+Pipemaker.prototype.hasPipeline = function(ext) {
 
   return !!this.mappings[ext];
 
