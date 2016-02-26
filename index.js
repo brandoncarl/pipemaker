@@ -7,10 +7,10 @@
   Instance
   • compile
   • compileFile
-  • createEngine
   • hasEngine
   • removeEngine
   • addPipeline
+  • createPipeline
 
 **/
 
@@ -150,13 +150,13 @@ function runTask(tasks, str, options, next) {
   @returns {Function} Compilation function fn(str, options, next).
 
   @example
-  motors.createEngine("jade");
-  motors.createEngine("jade>handlebars");
-  motors.createEngine("js>uglify-js");
+  pipemaker.createPipeline("jade");
+  pipemaker.createPipeline("jade>handlebars");
+  pipemaker.createPipeline("js>uglify-js");
 
 */
 
-Motors.prototype.createEngine = function(chain) {
+Pipemaker.prototype.createPipeline = function(chain) {
 
   var engines,
       self = this;
@@ -189,7 +189,7 @@ Motors.prototype.createEngine = function(chain) {
 Motors.prototype.getEngine = function(chain) {
 
   if (!this.engines[chain])
-    this.engines[chain] = this.createEngine(chain);
+    this.engines[chain] = this.createPipeline(chain);
 
   return this.engines[chain];
 
