@@ -7,10 +7,10 @@
   Instance
   • compile
   • compileFile
-  • addEngine
   • createEngine
   • hasEngine
   • removeEngine
+  • addPipeline
 
 **/
 
@@ -63,7 +63,7 @@ Motors = module.exports = function(options) {
   // Initialize engines
   this.engines = {};
   for (var ext in this.mappings)
-    this.addEngine(ext, this.mappings[ext]);
+    this.addPipeline(ext, this.mappings[ext]);
 
   // Store directory if designated
   if (options.dir) this.dir = options.dir;
@@ -207,7 +207,7 @@ Motors.prototype.getEngine = function(chain) {
 
 **/
 
-Motors.prototype.addEngine = function(ext, chain) {
+Pipemaker.prototype.addPipeline = function(ext, chain) {
 
   chain = chain || preschool.defaultEngineForExtension(ext);
 
@@ -236,7 +236,7 @@ Motors.prototype.removeEngine = function(ext) {
   delete this.mappings[ext];
 
   // Add default engine back (so as not to delete core functionality)
-  if (core[ext]) this.addEngine(ext, core[ext]);
+  if (core[ext]) this.addPipeline(ext, core[ext]);
 
 };
 
