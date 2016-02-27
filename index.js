@@ -24,7 +24,7 @@
 
 var fs           = require("fs"),
     path         = require("path"),
-    preschool    = require("preschool"),
+    compilers    = require("compilers"),
     Pipemaker;
 
 
@@ -163,7 +163,7 @@ Pipemaker.prototype.createPipeline = function(chain) {
       self = this;
 
   pipelines = chain.split(">").map(function(pipeline) {
-    return preschool(pipeline, { dir : self.dir, fetch : self.fetch });
+    return compilers(pipeline, { dir : self.dir, fetch : self.fetch });
   });
 
   return function(str, options, next) {
@@ -210,7 +210,7 @@ Pipemaker.prototype.getPipeline = function(chain) {
 
 Pipemaker.prototype.addPipeline = function(ext, chain) {
 
-  chain = chain || preschool.defaultEngineForExtension(ext);
+  chain = chain || compilers.defaultEngineForExtension(ext);
 
   // Store in both mappings and pipeline
   this.mappings[ext] = chain;
