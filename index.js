@@ -210,7 +210,7 @@ Pipemaker.prototype.getPipeline = function(chain) {
 
 Pipemaker.prototype.addPipeline = function(ext, chain) {
 
-  chain = chain || compilers.defaultEngineForExtension(ext);
+  chain = chain || compilers.defaultCompilerForExtension(ext);
 
   // Store in both mappings and pipeline
   this.mappings[ext] = chain;
