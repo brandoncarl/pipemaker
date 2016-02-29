@@ -1,6 +1,6 @@
 {
   "name": "pipemaker",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Manages multiple transpilers with chaining",
   "main": "index.js",
   "scripts": {
