@@ -23,6 +23,7 @@
 //
 
 var fs           = require("fs"),
+    assign       = require("lodash.assign"),
     path         = require("path"),
     compilers    = require("compilers"),
     Pipemaker;
@@ -58,8 +59,8 @@ var core = {
 Pipemaker = module.exports = function(options) {
 
   // Set up defaults
-  options = Object.assign({ fetch : true }, options);
-  this.mappings = Object.assign(core, options.mappings);
+  options = assign({ fetch : true }, options);
+  this.mappings = assign(core, options.mappings);
 
   // Initialize pipelines
   this.pipelines = {};
