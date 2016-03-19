@@ -122,6 +122,10 @@ Pipemaker.prototype.compileFile = function(filename, options, next) {
   var self = this,
       ext = path.parse(filename).ext.replace(/^\./, "");
 
+  // Stop-gap solution until more comprehensive strategy put into place
+  options = options || {}
+  if (!options.filename) options.filename = filename;
+
   fs.readFile(filename, "utf8", function(err, str) {
     if (err) return next(err);
     self.compile(ext, str, options, next);
