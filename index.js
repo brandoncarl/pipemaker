@@ -41,6 +41,8 @@ var core = {
   "css"  : "css"
 };
 
+var COMPILER_RE = /(\s*)['"]?>>\s?([^\s'"]+)/;
+
 
 
 /**
@@ -96,7 +98,11 @@ Pipemaker = module.exports = function(options) {
 
 Pipemaker.prototype.compile = function(ext, str, options, next) {
 
-  this.pipelines[this.mappings[ext]](str, options, next);
+  // Check if uses multiple compilers (requires line-by-line compilation)
+  if ("*" === this.mappings[ext])
+    this.compileWildcard(str, options, next);
+  else
+    this.pipelines[this.mappings[ext]](str, options, next);
 
 };
 
@@ -133,6 +139,93 @@ Pipemaker.prototype.compileFile = function(filename, options, next) {
 
 };
 
+
+/**
+
+  Compiles a wildcard string.
+
+  @param {String} str The string to be compiled.
+  @param {Object} [options={}] Options to be passed to rendering pipeline.
+  @param {Function} next Callback of type fn(err, compiled).
+
+**/
+
+Pipemaker.prototype.compileWildcard = function(str, options, next) {
+
+  var lines = str.split(/[\r\n]/);
+  this.compileBlock(lines, 0, options, next);
+
+};
+
+
+/**
+
+  Recursively compiles a wildcard block.
+
+  @param {Array} lines The lines to be compiled
+  @param {Number} lineNo The line number to start with
+  @param {Object} [options={}] Options to be passed to rendering pipeline
+  @param {Function} next Callback of type fn(err, compiled, numberOfLinesProcessed)
+
+**/
+
+Pipemaker.prototype.compileBlock = function(lines, lineNo, options, next) {
+
+  var self  = this;
+  var start = lineNo;
+  var block = parseCompiler(lines[lineNo]);
+  var base  = block.indent.length;
+  var out   = "";
+
+  // Add compiler if necessary
+  if (!this.hasPipeline(block.ext)) this.addPipeline(block.ext);
+
+  function complete(done) {
+    // Note that we clone options (otherwise each compiler may chain additional options)
+    self.compile(block.ext, block.lines.join("\n"), Object.assign({}, options), function(err, compiled) {
+      if (err) return done(err);
+      done(null, pad(compiled, base), lineNo - start);
+    });
+  }
+
+  // We always start with a compiler
+  (function nextLine() {
+
+    // If no line remains, we've reached end of input
+    var line = lines[++lineNo];
+    if ("undefined" === typeof line) return complete(next);
+
+    // If outdent occurs, then finish block
+    var space = line.match(/^(\s*)/)[0].length;
+    if (space < base) return complete(next);
+
+    if (COMPILER_RE.test(line)) {
+
+      // New indent block
+      if (space > base)
+        self.compileBlock(lines, lineNo, options, function(err, compiled, count) {
+          lines[lineNo] = compiled;
+          lines.splice(lineNo + 1, count - 1);
+          block.lines.push(compiled);
+          nextLine();
+        });
+
+      // Block complete
+      else
+        complete(function(err, compiled, count) {
+          if (err) return next(err);
+          out += compiled;
+          nextLine();
+        });
+
+    } else {
+      block.lines.push(line);
+      nextLine();
+    }
+
+  })();
+
+};
 
 
 /**
@@ -264,6 +357,12 @@ Pipemaker.prototype.getPipeline = function(chain) {
 **/
 
 Pipemaker.prototype.addPipeline = function(ext, chain) {
+
+  // Ignore wildcards (they are handled line-by-line)
+  if ("*" === chain) {
+    this.mappings[ext] = "*";
+    return;
+  }
 
   chain = chain || compilers.defaultCompilerForExtension(ext);
 
