@@ -156,6 +156,34 @@ function parseCompiler(str) {
 
 }
 
+
+/**
+
+  Helper function to ensure that a string has padding of at least indent.
+
+  @param {String} str The string to pad
+  @param {Number} minIndent The minimum indentation
+  @returns {String} Indented string
+  
+**/
+
+function pad(str, minIndent) {
+
+  var pad = str.match(/^(\s*)/)[0];
+  var lines;
+
+  if (pad.length < minIndent) {
+    pad = new Array(1 + minIndent - pad.length).join(" ");
+    lines = str.split(/[\n\r]/);
+    lines.forEach(function(line, i) { lines[i] = pad + lines[i]; });
+    str = lines.join("\n");
+  }
+
+  return str;
+
+}
+
+
 // Helper function for async iteration of pipelines
 function runTask(tasks, str, options, next) {
 
