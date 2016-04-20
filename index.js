@@ -134,6 +134,28 @@ Pipemaker.prototype.compileFile = function(filename, options, next) {
 };
 
 
+
+/**
+
+  Helper function to parse a compiler
+
+  @param {String} str The string to parse
+  @returns {Object} A compiler object {indent, ext, lines}
+
+**/
+
+function parseCompiler(str) {
+
+  var match = str.match(COMPILER_RE);
+
+  return {
+    indent: match[1],
+    ext: match[2],
+    lines: []
+  };
+
+}
+
 // Helper function for async iteration of pipelines
 function runTask(tasks, str, options, next) {
 
