@@ -34,14 +34,16 @@ pipemaker.compileFile("./path-to/file.coffee", next);
 
 ## API
 
-[Pipemaker](#Pipemaker) ⇒ <code>[Pipemaker](#Pipemaker)</code>  
-[.addPipeline(ext, [chain])](#Pipemaker+addPipeline) ⇒ <code>function</code>  
-[.compile(ext, str, [options], next)](#Pipemaker+compile)  
-[.compileFile(filename, [options], next)](#Pipemaker+compileFile)  
-[.createPipeline(chain)](#Pipemaker+createPipeline) ⇒ <code>function</code>  
-[.getPipeline(chain)](#Pipemaker+getPipeline) ⇒ <code>function</code>  
-[.hasPipeline(ext)](#Pipemaker+hasPipeline) ⇒ <code>Boolean</code>  
-[.removePipeline(ext)](#Pipemaker+removePipeline)  
+[Pipemaker](#Pipemaker) ⇒ <code>[Pipemaker](#Pipemaker)</code>
+[.addPipeline(ext, [chain])](#Pipemaker+addPipeline) ⇒ <code>function</code>
+[.compile(ext, str, [options], next)](#Pipemaker+compile)
+[.compileBlock(lines, lineNo, [options], next)](#Pipemaker+compileBlock)
+[.compileFile(filename, [options], next)](#Pipemaker+compileFile)
+[.compileWildcard(str, [options], next)](#Pipemaker+compileWildcard)
+[.createPipeline(chain)](#Pipemaker+createPipeline) ⇒ <code>function</code>
+[.getPipeline(chain)](#Pipemaker+getPipeline) ⇒ <code>function</code>
+[.hasPipeline(ext)](#Pipemaker+hasPipeline) ⇒ <code>Boolean</code>
+[.removePipeline(ext)](#Pipemaker+removePipeline)
 
 <a name="Pipemaker"></a>
 ### Pipemaker ⇒ <code>[Pipemaker](#Pipemaker)</code>
@@ -93,6 +95,29 @@ pipemaker.compileFile("app.coffee", function(err, compiled) {
     // Compiled version of app.coffee
   });
 ```
+<a name="Pipemaker+compileWildcard"></a>
+### pipemaker.compileWildcard(str, [options], next)
+Compiles a wildcard string.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| str | <code>String</code> |  | The string to be compiled. |
+| [options] | <code>Object</code> | <code>{}</code> | Options to be passed to rendering pipeline. |
+| next | <code>function</code> |  | Callback of type fn(err, compiled). |
+
+<a name="Pipemaker+compileBlock"></a>
+### pipemaker.compileBlock(lines, lineNo, [options], next)
+Recursively compiles a wildcard block.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| lines | <code>Array</code> |  | The lines to be compiled |
+| lineNo | <code>Number</code> |  | The line number to start with |
+| [options] | <code>Object</code> | <code>{}</code> | Options to be passed to rendering pipeline |
+| next | <code>function</code> |  | Callback of type fn(err, compiled, numberOfLinesProcessed) |
+
 <a name="Pipemaker+createPipeline"></a>
 ### pipemaker.createPipeline(chain) ⇒ <code>function</code>
 Returns a compilation function based on input chain.
@@ -138,7 +163,6 @@ Adds an pipeline for an extension, creating pipeline if necessary.
 ### pipemaker.removePipeline(ext)
 Removes an pipeline by extension.
 
-**Kind**: instance method of <code>[Pipemaker](#Pipemaker)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
