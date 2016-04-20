@@ -123,7 +123,7 @@ Pipemaker.prototype.compileFile = function(filename, options, next) {
       ext = path.parse(filename).ext.replace(/^\./, "");
 
   // Stop-gap solution until more comprehensive strategy put into place
-  options = options || {}
+  options = options || {};
   if (!options.filename) options.filename = filename;
 
   fs.readFile(filename, "utf8", function(err, str) {
