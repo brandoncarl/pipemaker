@@ -9,7 +9,7 @@
   "author": "Brandon Carl (http://www.brandoncarl.com/)",
   "license": "MIT",
   "dependencies": {
-    "compilers": "^1.0.2",
+    "compilers": "^1.2.0",
     "lodash.assign": "^4.0.4"
   },
   "repository": {
