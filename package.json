@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "compilers": "^1.2.0",
-    "lodash.assign": "^4.0.4"
+    "lodash.assign": "^4.2.0"
   },
   "repository": {
     "type": "git",
