@@ -285,6 +285,8 @@ function runTask(tasks, str, options, next) {
 
   task.call(null, str, options, function(err, res) {
     if (err) return next(err);
+    if ("function" === typeof(res))
+      res = res.call(null, options);
     runTask(tasks, res, options, next);
   });
 
@@ -295,28 +297,64 @@ function runTask(tasks, str, options, next) {
 
   Returns a compilation function based on input chain.
 
+  By default this will return a string. This is typically slow as it requires
+  templates to be rendered.
+
+  By inserting a @ into your pipeline, the intermediate results will be forced to
+  text, and a function will be returned. One compiler may be optionally provided
+  after the @, and will be used to render any results thereafter.
+
   @param {String} chain String containing names of pipelines to use.
   @returns {Function} Compilation function fn(str, options, next).
 
   @example
-  pipemaker.createPipeline("jade");
-  pipemaker.createPipeline("jade>handlebars");
-  pipemaker.createPipeline("js>uglify-js");
+  // Compiles and renders a template with context
+  pipemaker.createPipeline("pug");
+  
+  // Identical to the above
+  pipemaker.createPipeline("pug>@");
+
+  // Compiles the pug template and returns a function for reuse
+  pipemaker.createPipeline("@>pug");
+
+  // Renders the pug template and pipes the results into handlebars for rendering
+  pipemaker.createPipeline("pug>@>handlebars");
 
 */
 
 Pipemaker.prototype.createPipeline = function(chain) {
 
-  var pipelines,
-      self = this;
+  var self = this;
 
-  pipelines = chain.split(">").map(function(pipeline) {
-    return compilers(pipeline, { dir : self.dir, fetch : self.fetch });
-  });
+  var pipelines = chain.split(">").reduce(function(agg, pipeline) {
+    if (pipeline === "@") {
+      agg.which = "post";
+    } else
+      agg[agg.which].push(compilers(pipeline, { dir : self.dir, fetch : self.fetch }));
+    return agg;
+  }, { pre: [], post: [], which: "pre" });
 
+  if (pipelines.post.length > 1)
+    throw new Error("Only one pipeline can be specified after forcing to text");
+  
   return function(str, options, next) {
-    var tasks = pipelines.slice(0);
-    runTask(tasks, str, options, next);
+    runTask(pipelines.pre.slice(0), str, options, function(err, text) {
+      if (err) return next(err);
+
+      if (pipelines.post.length) {
+        pipelines.post[0](text, {}, function(err, results) {
+          if (err) return next(err);
+
+          // Wrap non-compilers into a function
+          if ("string" === typeof(results))
+            next(null, function() { return results });
+          else
+            next(null, results);
+        });
+      } else {
+        next(null, text);
+      }
+    });
   };
 
 };
