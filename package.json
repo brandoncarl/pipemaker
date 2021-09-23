@@ -1,6 +1,6 @@
 {
   "name": "pipemaker",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Manages multiple transpilers with chaining",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Brandon Carl (http://www.brandoncarl.com/)",
   "license": "MIT",
   "dependencies": {
-    "compilers": "^1.2.0",
+    "compilers": "^2.0.0",
     "lodash.assign": "^4.2.0"
   },
   "repository": {
